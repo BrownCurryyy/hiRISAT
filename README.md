@@ -1,4 +1,4 @@
-# PassPred - Satellite Pass Predictor
+# hiRISAT - Satellite Pass Predictor
 
 A full-stack application to predict satellite passes over a specific ground station.
 
