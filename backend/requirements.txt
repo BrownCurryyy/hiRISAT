@@ -2,3 +2,5 @@ fastapi
 uvicorn
 sgp4
 numpy
+httpx
+apscheduler
