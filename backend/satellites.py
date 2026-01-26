@@ -1,4 +1,14 @@
+# TLEs will be updated automatically by the scheduler
+last_updated = None
+
 SATELLITES = {
+    "RISAT-1": {
+        "norad_id": 38248,
+        "tle": (
+            "1 38248U 12017A   26025.12345678  .00001234  00000+0  12345-3 0  9991",
+            "2 38248  97.1234 123.1234 0001234  123.1234 123.1234 14.1234567812345"
+        ) # Placeholder, will be updated on startup
+    },
     "RISAT-2B": {
         "norad_id": 44233,
         "tle": (
@@ -20,5 +30,10 @@ SATELLITES = {
             "2 46905  36.8996  11.0887 0014287  31.0791 329.0793 15.01886533285519"
         )
     },
-
 }
+
+# Celestrak URLs for reference:
+# risat1 - https://celestrak.org/NORAD/elements/gp.php?CATNR=38248
+# risat2b - https://celestrak.org/NORAD/elements/gp.php?CATNR=44233
+# risat2br1 - https://celestrak.org/NORAD/elements/gp.php?CATNR=44857
+# risat2br2 - https://celestrak.org/NORAD/elements/gp.php?CATNR=46905

@@ -3,21 +3,25 @@
 A full-stack application to predict satellite passes over a specific ground station.
 
 ## Features
-- Real-time satellite pass prediction.
-- Visual dashboard with pass details (Rise, Peak, Set time, Max Elevation).
-- Support for multiple satellites.
+- **Real-time Pass Prediction**: Calculate upcoming passes for ISRO satellites.
+- **Automated TLE Updates**: Automatically fetches latest orbital data from Celestrak every 24 hours.
+- **Field-Ready UI**: Dashboard with real-time IST/UTC clock and data freshness indicators.
+- **Visual Dashboard**: Displays Rise, Peak, Set time, and Max Elevation.
 
 ## Supported Satellites
+- RISAT-1
 - RISAT-2B
+- RISAT-2BR1
 - RISAT-2BR2
 
 ## Tech Stack
 - **Frontend**: React, Vite
-- **Backend**: FastAPI, Python (SGP4)
+- **Backend**: FastAPI, Python (SGP4, APScheduler)
 
 ## Prerequisites
 - Python 3.8+
 - Node.js & npm
+- Internet connection (for fetching TLE data)
 
 ## Setup
 
@@ -41,7 +45,6 @@ For Windows users, simply run the startup script:
 .\start_app.bat
 ```
 
-
 ## Docker Support
 
 You can also run the application using Docker:
@@ -54,4 +57,3 @@ You can also run the application using Docker:
 2. **Access**
    - Frontend: http://localhost:5173
    - Backend: http://localhost:8000
-
