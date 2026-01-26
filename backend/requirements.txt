@@ -4,3 +4,5 @@ sgp4
 numpy
 httpx
 apscheduler
+gunicorn
+uvicorn

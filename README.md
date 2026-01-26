@@ -30,5 +30,19 @@ A modern, web-based satellite tracking application focused on ISRO’s **Radar I
 - **Frontend**: React, Vite, Framer Motion, React Icons
 - **Backend**: FastAPI, Python (SGP4, APScheduler)
 
+## Production Deployment
+
+### 1. Backend (Railway)
+1. Push your code to a GitHub repository.
+2. Connect the repository to [Railway](https://railway.app/).
+3. Railway will detect the `backend/Procfile` and start the server.
+4. Add any environment variables if needed (e.g., custom ports).
+
+### 2. Frontend (Vercel)
+1. Connect your repository to [Vercel](https://vercel.com/).
+2. Set the **Root Directory** to `frontend`.
+3. Add an Environment Variable: `VITE_API_URL` set to your Railway backend URL (e.g., `https://your-backend.up.railway.app`).
+4. Vercel will build and deploy the app using the `frontend/vercel.json` for routing.
+
 ## About the Project
 I love everything about ISRO and satellites now.
