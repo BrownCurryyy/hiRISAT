@@ -5,13 +5,13 @@ if (!API_URL) {
 }
 
 export async function getPasses(satelliteName) {
-    const res = await fetch(`${API_URL}/passes?sat=${satelliteName}`);
+    const res = await fetch(`/api/passes?sat=${satelliteName}`);
     return res.json();
 }
 
 export async function getSystemStatus() {
     try {
-        const res = await fetch(`${API_URL}/status`);
+        const res = await fetch(`/api/status`);
         return res.json();
     } catch (error) {
         console.error("Failed to fetch status:", error);
