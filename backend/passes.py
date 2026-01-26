@@ -38,10 +38,10 @@ def compute_passes(tle1, tle2, gs_lat, gs_lon, gs_alt):
 
     return [
         {
-            "rise": p["rise"].strftime("%H:%M UTC"),
-            "peak": p["peak"].strftime("%H:%M UTC"),
-            "set": p["set"].strftime("%H:%M UTC"),
-            "maxElevation": f"{p['max_el']:.1f}°"
+            "rise": p["rise"].isoformat(),
+            "peak": p["peak"].isoformat(),
+            "set": p["set"].isoformat(),
+            "max_elevation": p["max_el"]  # Return float, let frontend format
         }
         for p in passes
     ]
