@@ -1,59 +1,46 @@
-# hiRISAT - Satellite Pass Predictor
+r# hiRISAT - ISRO RISAT Pass Predictor
 
-A full-stack application to predict satellite passes over a specific ground station.
+
+A modern, web-based satellite tracking application focused on ISRO’s **Radar Imaging Satellite (RISAT)** constellation. 
 
 ## Features
-- **Real-time Pass Prediction**: Calculate upcoming passes for ISRO satellites.
-- **Automated TLE Updates**: Automatically fetches latest orbital data from Celestrak every 24 hours.
-- **Field-Ready UI**: Dashboard with real-time IST/UTC clock and data freshness indicators.
-- **Visual Dashboard**: Displays Rise, Peak, Set time, and Max Elevation.
+- **Real-time Pass Prediction**: Precise upcoming visibility windows for the RISAT fleet.
+- **Automated TLE Updates**: Intelligent every-24-hour orbital data synchronization from CelesTrak.
+- **Modern Glass UI**: Sleek "Space Black" theme with gold accents and a clutter-free multi-page layout.
+- **Countdown & IST Times**: Real-time IST/UTC clocks and countdown timers for incoming passes.
+- **Fleet Intelligence**: Detailed mission information for the entire RISAT constellation.
 
 ## Supported Satellites
-- RISAT-1
-- RISAT-2B
-- RISAT-2BR1
-- RISAT-2BR2
+- RISAT-1, 1A, 1B
+- RISAT-2, 2B, 2BR1, 2BR2
 
 ## Tech Stack
-- **Frontend**: React, Vite
+- **Frontend**: React, Vite, Framer Motion, React Icons
 - **Backend**: FastAPI, Python (SGP4, APScheduler)
 
-## Prerequisites
-- Python 3.8+
-- Node.js & npm
-- Internet connection (for fetching TLE data)
+## Quick Start
 
-## Setup
+### 1. Backend Setup
+```bash
+cd backend
+pip install -r requirements.txt
+python -m uvicorn app:app --port 8000
+```
 
-1. **Backend Setup**
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   ```
+### 2. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+> [!TIP]
+> Create a `.env` file in the `frontend` folder with `VITE_API_URL=http://localhost:8000` to configure the backend connection.
 
-2. **Frontend Setup**
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-## Running the App
-
-For Windows users, simply run the startup script:
-
+## Running the App (Windows)
+Simply run the startup script for a one-click launch:
 ```powershell
 .\start_app.bat
 ```
 
-## Docker Support
-
-You can also run the application using Docker:
-
-1. **Build and Run**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **Access**
-   - Frontend: http://localhost:5173
-   - Backend: http://localhost:8000
+## About the Project
+hiRISAT was built by **Srivatsan S** out of a passion for space systems and orbital mechanics. It aims to simplify satellite tracking for students and hobbyists while maintaining high-end aesthetics.

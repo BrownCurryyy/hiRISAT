@@ -1,11 +1,13 @@
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export async function getPasses(satelliteName) {
-    const res = await fetch(`http://localhost:8000/passes?sat=${satelliteName}`);
+    const res = await fetch(`${API_URL}/passes?sat=${satelliteName}`);
     return res.json();
 }
 
 export async function getSystemStatus() {
     try {
-        const res = await fetch("http://localhost:8000/status");
+        const res = await fetch(`${API_URL}/status`);
         return res.json();
     } catch (error) {
         console.error("Failed to fetch status:", error);
