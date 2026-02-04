@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SatelliteSelector from "../components/SatelliteSelector";
-import GroundStationForm from "../components/GroundStationForm";
+import GroundStationSwitcher from "../components/GroundStationSwitcher";
 import PassTable from "../components/PassTable";
 import Countdown from "../components/Countdown";
-import { getPasses } from "../services/api";
+import { getPasses, getStations } from "../services/api";
 
 export default function Home() {
     const [satellite, setSatellite] = useState("RISAT-1");
@@ -12,23 +12,50 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [nextPass, setNextPass] = useState(null);
+    const [stations, setStations] = useState([]);
+    const [currentStation, setCurrentStation] = useState(null);
 
-    // Auto-predict when satellite changes
+    // Initial stations fetch
     useEffect(() => {
-        handlePredict();
-    }, [satellite]);
+        async function fetchStations() {
+            try {
+                const data = await getStations();
+                if (data && Array.isArray(data.stations)) {
+                    setStations(data.stations);
+                    if (data.stations.length > 0) {
+                        setCurrentStation(data.stations[0]);
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to fetch stations:", err);
+            }
+        }
+        fetchStations();
+    }, []);
+
+    // Auto-predict when satellite or station changes
+    useEffect(() => {
+        if (currentStation) {
+            handlePredict();
+        }
+    }, [satellite, currentStation]);
 
     const handlePredict = async () => {
+        if (!currentStation) return;
         setLoading(true);
         setError(null);
         try {
-            const data = await getPasses(satellite);
-            setPasses(data);
-
-            // Find next upcoming pass
-            const now = new Date();
-            const upcoming = data.find(p => new Date(p.rise) > now);
-            setNextPass(upcoming || null);
+            const data = await getPasses(satellite, currentStation.name);
+            if (Array.isArray(data)) {
+                setPasses(data);
+                // Find next upcoming pass
+                const now = new Date();
+                const upcoming = data.find(p => new Date(p.rise) > now);
+                setNextPass(upcoming || null);
+            } else {
+                setPasses([]);
+                setNextPass(null);
+            }
         } catch (err) {
             console.error("Failed to fetch passes:", err);
             setError("Failed to fetch passes. Please check backend connection.");
@@ -68,7 +95,17 @@ export default function Home() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <SatelliteSelector value={satellite} onChange={setSatellite} />
                     <Countdown nextPass={nextPass} />
-                    <GroundStationForm />
+                    {stations.length > 0 ? (
+                        <GroundStationSwitcher
+                            stations={stations}
+                            currentStation={currentStation}
+                            onStationChange={setCurrentStation}
+                        />
+                    ) : (
+                        <div className="card" style={{ opacity: 0.5 }}>
+                            <p>Loading Ground Stations...</p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Column: Pass Table */}
