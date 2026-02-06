@@ -26,3 +26,13 @@ export async function getSystemStatus() {
         return { last_updated: null };
     }
 }
+
+export async function getSchedule() {
+    try {
+        const res = await fetch(`/api/schedule`);
+        return res.json();
+    } catch (error) {
+        console.error("Failed to fetch schedule:", error);
+        return {};
+    }
+}
