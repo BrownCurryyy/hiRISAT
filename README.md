@@ -1,33 +1,83 @@
-# hiRISAT - ISRO RISAT Pass Predictor
+# hiRISAT
 
-A modern, web-based satellite tracking application focused on ISRO’s **Radar Imaging Satellite (RISAT)** constellation. 
+**The Advanced Mission Control Dashboard for ISRO's RISAT Constellation.**
 
-![logo](frontend/src/assets/logo.png)
+hiRISAT is a high-precision satellite tracking and scheduling engine designed to bridge the gap between complex orbital mechanics and user-friendly design. It provides real-time pass predictions, conflict-free scheduling, and a sleek "Mission Control" interface for ground station operators and enthusiasts.
 
-## Features
-- **Real-time Pass Prediction**  
-  Accurate rise, peak, and set timings for RISAT satellites using SGP4 propagation.
-- **Automated TLE Updates**  
-  Orbital data is fetched from CelesTrak every 24 hours to maintain prediction accuracy.
-- **Modern Glass UI**  
-  A clean “Space Black” interface with subtle animations and gold accents.
-- **IST & UTC Support**  
-  Built-in clocks, time conversion, and countdown timers for upcoming passes.
-- **Fleet Intelligence**  
-  Mission background and status information for each tracked RISAT satellite.
+---
 
-## Supported Satellites
-- RISAT-1
-- RISAT-2B
-- RISAT-2BR1
-- RISAT-2BR2
+## 🚀 Modules
 
-> Some RISAT satellites are not publicly trackable due to orbital decay or restricted
-> availability of TLE data.
+### 1. Pass Predictor (Home)
+A real-time dashboard for tracking individual satellites.
+- **Next Pass Countdown**: Prominent timer for the upcoming contact.
+- **Live Orbit Data**: Calculates Elevation, Azimuth, and Range using SGP4 propagation.
+- **Card-Based Grid**: View all upcoming passes in a clean, scrollable grid with expanding details (Mean Elevation, Orbit Direction).
+- **Multi-Station Support**: Switch between multiple Ground Stations instantly.
 
-## Tech Stack
-- **Frontend**: React, Vite, Framer Motion, React Icons
-- **Backend**: FastAPI, Python (SGP4, APScheduler)
+### 2. Scheduling Dashboard
+A comprehensive tool for managing ground station resources.
+- **Conflict Detection**: Automatically identifies and flags overlapping passes across multiple satellites.
+- **Optimization**: "Drops" conflicting passes based on priority (Max Elevation + Duration score) to ensure the best possible schedule.
+- **Station Metrics**: Real-time stats on Utilization %, Active Hours, and Conflict Rates.
+- **Visual Status**: Neon indicators for "Scheduled" (Cyan) vs "Dropped" (Red) passes.
 
-## About the Project
-I love everything about ISRO and satellites now.
+### 3. Mission Status (About)
+A dedicated space for project philosophy and developer insights.
+- **Tech Stack Visualization**: Badges for the core technologies used.
+- **Developer Profile**: Connect with the creator.
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend**
+- **React 18** (Vite): Blazing fast UI rendering.
+- **Framer Motion**: Smooth, complex layout animations (expanding cards, tab switching).
+- **CSS Modules**: Modular, scoped styling with a generic "Glassmorphism" theme.
+
+**Backend**
+- **FastAPI**: High-performance async Python framework.
+- **SGP4**: Industry-standard orbital propagation library.
+- **Skyfield / NumPy**: Precision astronomy calculations.
+- **APScheduler**: Automated background tasks (TLE fetching).
+
+---
+
+## ⚡ Getting Started
+
+### Prerequisites
+- Node.js (v16+)
+- Python (v3.9+)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/BrownCurryyy/hiRISAT.git
+   cd hiRISAT
+   ```
+
+2. **Backend Setup**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   python -m uvicorn app:app --reload
+   ```
+
+3. **Frontend Setup**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+---
+
+## 📡 Supported Satellites
+- **RISAT-1** (Radar Imaging Satellite 1)
+- **RISAT-2B** (X-Band SAR)
+- **RISAT-2BR1**
+- **RISAT-2BR2**
+
+---

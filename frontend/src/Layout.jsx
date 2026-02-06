@@ -18,9 +18,9 @@ export default function Layout() {
                 backdropFilter: 'blur(5px)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
             }}>
-                <NavLink to="/" current={location.pathname}>Dashboard</NavLink>
-                <NavLink to="/info" current={location.pathname}>Satellites</NavLink>
+                <NavLink to="/" current={location.pathname}>Pass-Predictor</NavLink>
                 <NavLink to="/scheduling" current={location.pathname}>Scheduling</NavLink>
+                <NavLink to="/info" current={location.pathname}>Info</NavLink>
                 <NavLink to="/about" current={location.pathname}>About</NavLink>
             </nav>
 

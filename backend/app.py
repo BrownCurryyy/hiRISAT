@@ -141,18 +141,28 @@ def get_schedule():
             p_rise = datetime.fromisoformat(p["rise"])
             p_set = datetime.fromisoformat(p["set"])
             
-            has_overlap = False
+            overlap_reason = None
+            
             for selected in selected_passes:
+                if selected["status"] == "dropped": # Ignore already dropped passes
+                    continue
+
                 s_rise = datetime.fromisoformat(selected["rise"])
                 s_set = datetime.fromisoformat(selected["set"])
                 
                 # Overlap logic: (StartA <= EndB) and (EndA >= StartB)
                 if (p_rise <= s_set) and (p_set >= s_rise):
-                    has_overlap = True
+                    overlap_reason = f"Conflict with {selected['satellite']}"
                     break
             
-            if not has_overlap:
-                selected_passes.append(p)
+            if overlap_reason:
+                p["status"] = "dropped"
+                p["reason"] = overlap_reason
+            else:
+                p["status"] = "scheduled"
+                p["reason"] = "Optimal slot"
+                
+            selected_passes.append(p)
                 
         # Sort selected passes by time for the timeline
         selected_passes.sort(key=lambda x: x["rise"])
