@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { getSchedule, getStations } from "../services/api";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import useMobile from "../hooks/useMobile";
 
 export default function SchedulingPage() {
+    const isMobile = useMobile();
     const [schedule, setSchedule] = useState({});
     const [stations, setStations] = useState([]);
     const [selectedStation, setSelectedStation] = useState(null);
@@ -13,6 +15,7 @@ export default function SchedulingPage() {
     const [totalDuration, setTotalDuration] = useState(0);
     const [utilization, setUtilization] = useState(0);
     const [stationMeta, setStationMeta] = useState(null);
+    const [isStationOpen, setIsStationOpen] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -68,66 +71,141 @@ export default function SchedulingPage() {
 
     return (
         <div style={{
-            height: "calc(100vh - 120px)", // Adjusted to fit in layout without global scroll
+            height: isMobile ? "auto" : "calc(100vh - 120px)",
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            overflow: "hidden",
+            overflow: isMobile ? "visible" : "hidden",
             boxSizing: "border-box",
             position: "relative",
             left: "50%",
             marginLeft: "-50vw",
-            width: "98vw" // Breakout of container mostly
+            width: "98vw"
         }}>
             {/* --- HEADER SECTION --- */}
-            <div style={{ marginBottom: "1rem", flexShrink: 0, padding: "0 2rem" }}>
+            <div style={{ marginBottom: "1rem", flexShrink: 0, padding: isMobile ? "0 1rem" : "0 2rem" }}>
 
 
                 {/* Station Tabs */}
-                <div style={{
-                    display: "flex",
-                    gap: "0.6rem",
-                    overflowX: "auto",
-                    paddingBottom: "5px",
-                    scrollbarWidth: "none",
-                    justifyContent: "center"
-                }}>
-                    {stations.map(station => (
-                        <StationTab
-                            key={station.name}
-                            station={station}
-                            isSelected={selectedStation === station.name}
-                            onClick={() => setSelectedStation(station.name)}
-                        />
-                    ))}
+                <div style={{ position: "relative" }}>
+                    {isMobile ? (
+                        <div style={{ width: "100%" }}>
+                            <button
+                                onClick={() => setIsStationOpen(!isStationOpen)}
+                                style={{
+                                    background: "rgba(255,255,255,0.05)",
+                                    color: "var(--accent-gold)",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    padding: "0.6rem 1rem",
+                                    borderRadius: "8px",
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    fontSize: "0.9rem",
+                                    fontWeight: "bold"
+                                }}
+                            >
+                                STATION: {selectedStation || "Select Station"}
+                                <span style={{ fontSize: "1.2rem" }}>{isStationOpen ? "×" : "☰"}</span>
+                            </button>
+                            {isStationOpen && (
+                                <div style={{
+                                    position: "absolute",
+                                    top: "100%",
+                                    left: 0,
+                                    width: "100%",
+                                    background: "rgba(10,10,10,0.95)",
+                                    backdropFilter: "blur(10px)",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    borderRadius: "8px",
+                                    zIndex: 100,
+                                    marginTop: "5px",
+                                    maxHeight: "200px",
+                                    overflowY: "auto"
+                                }}>
+                                    {stations.map(station => (
+                                        <button
+                                            key={station.name}
+                                            onClick={() => { setSelectedStation(station.name); setIsStationOpen(false); }}
+                                            style={{
+                                                width: "100%",
+                                                padding: "0.8rem 1rem",
+                                                background: selectedStation === station.name ? "rgba(212,175,55,0.1)" : "none",
+                                                color: selectedStation === station.name ? "var(--accent-gold)" : "#888",
+                                                border: "none",
+                                                textAlign: "left",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid rgba(255,255,255,0.05)"
+                                            }}
+                                        >
+                                            {station.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div style={{
+                            display: "flex",
+                            gap: "0.6rem",
+                            overflowX: "auto",
+                            paddingBottom: "10px",
+                            scrollbarWidth: "none",
+                            justifyContent: "center"
+                        }}>
+                            {stations.map(station => (
+                                <StationTab
+                                    key={station.name}
+                                    station={station}
+                                    isSelected={selectedStation === station.name}
+                                    onClick={() => setSelectedStation(station.name)}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* --- STATS PANEL (Moved Below Tabs) --- */}
+            {/* --- STATS PANEL --- */}
             <div style={{
                 flexShrink: 0,
                 background: "rgba(0,0,0,0.6)",
                 backdropFilter: "blur(10px)",
                 border: "1px solid rgba(255,255,255,0.05)",
                 borderRadius: "12px",
-                padding: "1rem 2rem",
+                padding: isMobile ? "1rem" : "1rem 2rem",
                 display: "flex",
+                flexDirection: isMobile ? "column" : "row",
                 justifyContent: "space-between",
-                alignItems: "center",
-                margin: "0 2rem 1rem 2rem", // Inset margin
+                alignItems: isMobile ? "flex-start" : "center",
+                gap: isMobile ? "1.5rem" : "0",
+                margin: isMobile ? "0 1rem 1rem 1rem" : "0 2rem 1rem 2rem",
                 boxSizing: "border-box"
             }}>
-                <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+                <div style={{
+                    display: "flex",
+                    gap: isMobile ? "1rem" : "2rem",
+                    alignItems: "center",
+                    flexWrap: isMobile ? "wrap" : "nowrap"
+                }}>
                     <StatItem label="Station" value={selectedStation} color="#eee" />
-                    <div style={{ width: "1px", height: "30px", background: "rgba(255,255,255,0.1)" }} />
+                    {!isMobile && <div style={{ width: "1px", height: "30px", background: "rgba(255,255,255,0.1)" }} />}
                     <StatItem label="Utilization" value={utilization + "%"} color="var(--accent-gold)" />
                     <StatItem label="Active Hours" value={(totalDuration / 3600).toFixed(1) + "h"} />
-                    <div style={{ width: "1px", height: "30px", background: "rgba(255,255,255,0.1)" }} />
+                    {!isMobile && <div style={{ width: "1px", height: "30px", background: "rgba(255,255,255,0.1)" }} />}
                     <StatItem label="Scheduled" value={scheduled.length} color="#4ECDC4" />
                     <StatItem label="Conflicts" value={dropped.length} color="#FF6B6B" />
                 </div>
 
-                <div style={{ fontSize: "0.8rem", color: "#666", textAlign: "right" }}>
+                <div style={{
+                    fontSize: "0.8rem",
+                    color: "#666",
+                    textAlign: isMobile ? "left" : "right",
+                    width: isMobile ? "100%" : "auto",
+                    borderTop: isMobile ? "1px solid rgba(255,255,255,0.05)" : "none",
+                    paddingTop: isMobile ? "0.8rem" : 0
+                }}>
                     <div>LAT: {stationMeta?.lat?.toFixed(2)}° LON: {stationMeta?.lon?.toFixed(2)}°</div>
                     <div style={{ marginTop: "4px", color: "var(--accent-gold)", opacity: 0.7 }}>Auto-Optimization Active</div>
                 </div>
@@ -135,19 +213,19 @@ export default function SchedulingPage() {
 
             {/* --- MAIN CONTENT: GRID --- */}
             <div
-                className="hide-scrollbar" // Custom class for hiding scrollbar
+                className="hide-scrollbar"
                 style={{
                     flex: 1,
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+                    gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
                     gridAutoRows: "min-content",
                     gap: "1rem",
-                    overflowY: "auto",
-                    padding: "0 2rem 2rem 2rem", // Bottom padding for scroll space
+                    overflowY: isMobile ? "visible" : "auto",
+                    padding: isMobile ? "0 1rem 2rem 1rem" : "0 2rem 2rem 2rem",
                     alignContent: "start",
                     borderRadius: "8px",
-                    scrollbarWidth: "none", // Firefox
-                    msOverflowStyle: "none"  // IE/Edge
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none"
                 }}
             >
                 <style>{`
