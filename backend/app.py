@@ -101,3 +101,61 @@ def get_stations():
 @app.get("/status")
 def get_status():
     return {"last_updated": last_updated}
+
+@app.get("/schedule")
+def get_schedule():
+    # 1. Collect all potential passes
+    all_passes = {} # station -> list of passes
+    
+    for station_name, gs in GROUND_STATIONS.items():
+        all_passes[station_name] = []
+        for sat_name, sat_data in SATELLITES.items():
+            tle1, tle2 = sat_data["tle"]
+            # Calling compute_passes for each pair
+            # Note: This computes for the *next* 24h from *now* each time called
+            # Ideally we'd fix the 'now' time, but for this scale it's negligible
+            raw_passes = compute_passes(tle1, tle2, gs["lat"], gs["lon"], gs["alt"])
+            
+            for p in raw_passes:
+                # Add metadata we need for scheduling
+                p["satellite"] = sat_name
+                p["station"] = station_name
+                # Calculate score: 70% elevation, 30% duration (normalized roughly)
+                # Elevation 0-90, Duration 0-900s
+                # Let's just use raw heuristic: Score = MaxEl + (Duration / 60)
+                # E.g. 80deg + 10min = 90 score. 20deg + 5min = 25 score.
+                p["score"] = p["max_elevation"] + (p["duration"] / 60.0)
+                all_passes[station_name].append(p)
+
+    # 2. Optimize per station
+    optimized_schedule = {}
+    
+    for station_name, passes in all_passes.items():
+        # Sort by score descending
+        passes.sort(key=lambda x: x["score"], reverse=True)
+        
+        selected_passes = []
+        
+        for p in passes:
+            # Check for overlap with already selected passes
+            p_rise = datetime.fromisoformat(p["rise"])
+            p_set = datetime.fromisoformat(p["set"])
+            
+            has_overlap = False
+            for selected in selected_passes:
+                s_rise = datetime.fromisoformat(selected["rise"])
+                s_set = datetime.fromisoformat(selected["set"])
+                
+                # Overlap logic: (StartA <= EndB) and (EndA >= StartB)
+                if (p_rise <= s_set) and (p_set >= s_rise):
+                    has_overlap = True
+                    break
+            
+            if not has_overlap:
+                selected_passes.append(p)
+                
+        # Sort selected passes by time for the timeline
+        selected_passes.sort(key=lambda x: x["rise"])
+        optimized_schedule[station_name] = selected_passes
+
+    return optimized_schedule

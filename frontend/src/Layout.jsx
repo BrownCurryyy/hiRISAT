@@ -20,6 +20,7 @@ export default function Layout() {
             }}>
                 <NavLink to="/" current={location.pathname}>Dashboard</NavLink>
                 <NavLink to="/info" current={location.pathname}>Satellites</NavLink>
+                <NavLink to="/scheduling" current={location.pathname}>Scheduling</NavLink>
                 <NavLink to="/about" current={location.pathname}>About</NavLink>
             </nav>
 
