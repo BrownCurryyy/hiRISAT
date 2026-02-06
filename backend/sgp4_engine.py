@@ -45,11 +45,17 @@ def satellite_elevation(tle1, tle2, time_utc, gs_lat, gs_lon, gs_alt):
         time_utc.second + time_utc.microsecond * 1e-6
     )
 
-    e, r, _ = sat.sgp4(jd, fr)
+    e, r, v = sat.sgp4(jd, fr) # Get velocity v as well
     if e != 0:
-        return None
+        return None, None
 
     sat_ecef = eci_to_ecef(r, time_utc)
     gs_ecef = geodetic_to_ecef(gs_lat, gs_lon, gs_alt)
 
-    return elevation_angle(sat_ecef, gs_ecef)
+    el = elevation_angle(sat_ecef, gs_ecef)
+    
+    # Determine direction based on z-velocity in ECI (simple approximation near equator/mid-lat)
+    # v[2] > 0 is roughly Northbound (Ascending)
+    direction = "Ascending" if v[2] > 0 else "Descending"
+    
+    return el, direction
