@@ -1,5 +1,6 @@
 # hiRISAT
 
+![alt text](assets/logo.png)
 **The Advanced Mission Control Dashboard for ISRO's RISAT Constellation.**
 
 hiRISAT is a high-precision satellite tracking and scheduling engine designed to bridge the gap between complex orbital mechanics and user-friendly design. It provides real-time pass predictions, conflict-free scheduling, and a sleek "Mission Control" interface for ground station operators and enthusiasts.
@@ -26,23 +27,6 @@ A comprehensive tool for managing ground station resources.
 A dedicated space for project philosophy and developer insights.
 - **Tech Stack Visualization**: Badges for the core technologies used.
 - **Developer Profile**: Connect with the creator.
-
----
-
-## 🛠️ Tech Stack
-
-**Frontend**
-- **React 18** (Vite): Blazing fast UI rendering.
-- **Framer Motion**: Smooth, complex layout animations (expanding cards, tab switching).
-- **CSS Modules**: Modular, scoped styling with a generic "Glassmorphism" theme.
-
-**Backend**
-- **FastAPI**: High-performance async Python framework.
-- **SGP4**: Industry-standard orbital propagation library.
-- **Skyfield / NumPy**: Precision astronomy calculations.
-- **APScheduler**: Automated background tasks (TLE fetching).
-
----
 
 ## ⚡ Getting Started
 
