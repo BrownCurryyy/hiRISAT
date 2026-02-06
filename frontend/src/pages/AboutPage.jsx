@@ -1,15 +1,19 @@
 import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import profile from "../assets/profile.jpg";
+import useMobile from "../hooks/useMobile";
 
 export default function AboutPage() {
+    const isMobile = useMobile();
+
     return (
         <div style={{
-            height: "calc(100vh - 100px)",
+            height: isMobile ? "auto" : "calc(100vh - 100px)",
             width: "100%",
             display: "flex",
-            overflow: "hidden",
-            padding: "0 2rem"
+            flexDirection: isMobile ? "column" : "row",
+            overflow: isMobile ? "visible" : "hidden",
+            padding: isMobile ? "0 1rem 3rem 1rem" : "0 2rem"
         }}>
             {/* --- LEFT PANEL: MISSION & TECH --- */}
             <div style={{
@@ -17,26 +21,47 @@ export default function AboutPage() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                paddingRight: "4rem"
+                paddingRight: isMobile ? 0 : "4rem",
+                paddingTop: isMobile ? "2rem" : 0,
+                textAlign: isMobile ? "center" : "left"
             }}>
                 <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, x: isMobile ? 0 : -50, y: isMobile ? 20 : 0 }}
+                    animate={{ opacity: 1, x: 0, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1rem",
+                        marginBottom: "1rem",
+                        justifyContent: isMobile ? "center" : "flex-start"
+                    }}>
                         <div style={{ width: "40px", height: "2px", background: "var(--accent-gold)" }} />
                         <span style={{ color: "var(--accent-gold)", letterSpacing: "2px", fontSize: "0.9rem", fontWeight: "bold" }}>MISSION CONTROL</span>
                     </div>
 
                     <h1 style={{
-                        fontSize: "4rem", fontWeight: "200", lineHeight: "1.1", marginBottom: "2rem",
-                        background: "linear-gradient(to right, #fff, #888)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"
+                        fontSize: isMobile ? "2.5rem" : "4rem",
+                        fontWeight: "200",
+                        lineHeight: "1.1",
+                        marginBottom: "2rem",
+                        background: "linear-gradient(to right, #fff, #888)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent"
                     }}>
                         Mapping the <br /> Sky accurately.
                     </h1>
 
-                    <p style={{ fontSize: "1.1rem", color: "#aaa", lineHeight: "1.8", marginBottom: "3rem", maxWidth: "600px" }}>
+                    <p style={{
+                        fontSize: isMobile ? "0.95rem" : "1.1rem",
+                        color: "#aaa",
+                        lineHeight: "1.8",
+                        marginBottom: "3rem",
+                        maxWidth: "600px",
+                        marginInline: isMobile ? "auto" : "0",
+                        textAlign: isMobile ? "justify" : "left"
+                    }}>
                         <strong style={{ color: "#fff" }}>hiRISAT</strong> is a mission-style satellite tracking and scheduling engine focused on ISRO’s RISAT fleet.
                         <br /><br />
                         It models real satellite orbits using SGP4 propagation and live TLE updates to predict contact windows across multiple Indian and overseas ground stations.
@@ -54,11 +79,16 @@ export default function AboutPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                position: "relative"
+                position: "relative",
+                paddingTop: isMobile ? "2rem" : 0
             }}>
                 {/* Decorative Background Elements */}
                 <div style={{
-                    position: "absolute", top: "20%", right: "10%", width: "300px", height: "300px",
+                    position: "absolute",
+                    top: isMobile ? "10%" : "20%",
+                    right: isMobile ? "0" : "10%",
+                    width: isMobile ? "200px" : "300px",
+                    height: isMobile ? "200px" : "300px",
                     background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, rgba(0,0,0,0) 70%)",
                     zIndex: 0
                 }} />
@@ -72,7 +102,7 @@ export default function AboutPage() {
                         backdropFilter: "blur(20px)",
                         border: "1px solid rgba(255,255,255,0.1)",
                         borderRadius: "24px",
-                        padding: "3rem",
+                        padding: isMobile ? "2rem" : "3rem",
                         width: "100%",
                         maxWidth: "500px",
                         zIndex: 1,
@@ -87,14 +117,14 @@ export default function AboutPage() {
                         }}>
                             <img style={{ width: "100%", height: "100%", borderRadius: "50%" }} src={profile} alt="" />
                         </div>
-                        <div>
+                        <div style={{ textAlign: "left" }}>
                             <h2 style={{ fontSize: "1.8rem", margin: 0, fontWeight: "400" }}>Srivatsan S</h2>
                             <div style={{ color: "var(--accent-gold)", fontSize: "0.9rem", opacity: 0.8 }}>Lead Developer</div>
                         </div>
                     </div>
 
-                    <p style={{ color: "#888", lineHeight: "1.6", marginBottom: "2rem" }}>
-                        Computer science student who likes building things and recently fell down the space-systems rabbit hole.<p>(cant beleive that you are reading this lol)</p></p>
+                    <p style={{ color: "#888", lineHeight: "1.6", marginBottom: "2rem", textAlign: "left" }}>
+                        Computer science student who likes building things and recently fell down the space-systems rabbit hole.<div style={{ fontSize: "0.8rem", marginTop: "10px", opacity: 0.5 }}>(cant believe that you are reading this lol)</div></p>
 
 
                     <div style={{ display: "flex", gap: "1rem" }}>

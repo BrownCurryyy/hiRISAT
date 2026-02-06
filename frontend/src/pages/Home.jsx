@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { getPasses, getStations } from "../services/api";
+import useMobile from "../hooks/useMobile";
 
 export default function Home() {
+    const isMobile = useMobile();
+
     // --- STATE ---
     const [satellite, setSatellite] = useState("RISAT-1");
     const [passes, setPasses] = useState([]);
@@ -10,6 +13,8 @@ export default function Home() {
     const [currentStation, setCurrentStation] = useState(null);
     const [nextPass, setNextPass] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isSatMenuOpen, setIsSatMenuOpen] = useState(false);
+    const [isStationMenuOpen, setIsStationMenuOpen] = useState(false);
 
     // --- FETCH STATIONS ---
     useEffect(() => {
@@ -49,34 +54,40 @@ export default function Home() {
     // --- RENDER ---
     return (
         <div style={{
-            height: "calc(100vh - 120px)", // Main container height
+            height: isMobile ? "auto" : "calc(100vh - 120px)",
             width: "100%",
             display: "flex",
-            overflow: "hidden",
+            flexDirection: isMobile ? "column" : "row",
+            overflow: isMobile ? "visible" : "hidden",
             boxSizing: "border-box",
-            padding: "0 2rem",
+            padding: isMobile ? "0 1rem" : "0 2rem",
             position: "relative",
             left: "50%",
             marginLeft: "-50vw",
-            width: "98vw" // Wider breakout
+            width: "98vw"
         }}>
 
             {/* --- LEFT PANEL: INFO --- */}
             <div style={{
-                width: "280px", // Slightly narrower
+                width: isMobile ? "100%" : "280px",
                 flexShrink: 0,
                 display: "flex",
-                flexDirection: "column",
-                gap: "1.5rem",
-                paddingRight: "2rem",
-                borderRight: "1px solid rgba(255,255,255,0.05)",
+                flexDirection: isMobile ? "row" : "column",
+                flexWrap: isMobile ? "wrap" : "nowrap",
+                alignItems: isMobile ? "center" : "stretch",
+                justifyContent: isMobile ? "space-between" : "flex-start",
+                gap: isMobile ? "1rem" : "1.5rem",
+                paddingRight: isMobile ? 0 : "2rem",
+                paddingBottom: isMobile ? "1.5rem" : 0,
+                borderRight: isMobile ? "none" : "1px solid rgba(255,255,255,0.05)",
+                borderBottom: isMobile ? "1px solid rgba(255,255,255,0.05)" : "none",
                 paddingTop: "1rem"
             }}>
                 {/* Title */}
                 <div>
                     <div style={{ fontSize: "0.8rem", color: "#666", letterSpacing: "1px" }}>TARGET</div>
                     <h1 style={{
-                        fontSize: "2.5rem", fontWeight: "300", letterSpacing: "2px", margin: "0",
+                        fontSize: isMobile ? "2rem" : "2.5rem", fontWeight: "300", letterSpacing: "2px", margin: "0",
                         background: "linear-gradient(to right, #fff, #aaa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"
                     }}>
                         {satellite}
@@ -87,7 +98,9 @@ export default function Home() {
                 <div style={{
                     background: "rgba(0,0,0,0.4)", backdropFilter: "blur(10px)",
                     border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px",
-                    padding: "1.5rem", textAlign: "center"
+                    padding: isMobile ? "1rem" : "1.5rem", textAlign: "center",
+                    flex: isMobile ? "1 1 auto" : "0 0 auto",
+                    minWidth: isMobile ? "150px" : "auto"
                 }}>
                     <div style={{ fontSize: "0.8rem", color: "#888", marginBottom: "0.5rem" }}>NEXT PASS IN</div>
                     {nextPass ? (
@@ -97,9 +110,15 @@ export default function Home() {
                     )}
                 </div>
 
-                {/* Station Info */}
+                {/* Station Info - Inline on mobile */}
                 {currentStation && (
-                    <div style={{ fontSize: "0.9rem", color: "#666", lineHeight: "1.6" }}>
+                    <div style={{
+                        fontSize: "0.9rem", color: "#666", lineHeight: "1.6",
+                        width: isMobile ? "100%" : "auto",
+                        display: isMobile ? "flex" : "block",
+                        gap: "1.5rem",
+                        marginTop: isMobile ? "0.5rem" : 0
+                    }}>
                         <div>STATION: <span style={{ color: "#fff" }}>{currentStation.name}</span></div>
                         <div>LAT: {currentStation.lat?.toFixed(2)}°</div>
                         <div>LON: {currentStation.lon?.toFixed(2)}°</div>
@@ -110,59 +129,186 @@ export default function Home() {
             {/* --- RIGHT PANEL: CONTENT --- */}
             <div style={{
                 flex: 1,
-                display: "flex",
                 flexDirection: "column",
-                paddingLeft: "2rem"
+                paddingLeft: isMobile ? 0 : "2rem",
+                paddingTop: isMobile ? "1.5rem" : 0
             }}>
-                {/* Header Row: Satellites (center) */}
-                <div style={{ display: "flex", paddingBottom: "1rem", gap: "0.8rem", alignItems: "center" }}>
-                    {["RISAT-1", "RISAT-2B", "RISAT-2BR1", "RISAT-2BR2"].map(sat => (
-                        <button
-                            key={sat}
-                            onClick={() => setSatellite(sat)}
-                            style={{
-                                background: satellite === sat ? "var(--accent-gold)" : "rgba(255,255,255,0.05)",
-                                color: satellite === sat ? "#000" : "#aaa",
-                                border: "none",
-                                padding: "0.6rem 1.5rem",
-                                borderRadius: "30px",
-                                cursor: "pointer",
-                                fontSize: "0.9rem",
-                                fontWeight: "bold",
-                                transition: "all 0.2s",
-                                justifyContent: "flex-end"
-                            }}
-                        >
-                            {sat}
-                        </button>
-                    ))}
+                {/* Header Row: Satellites */}
+                <div style={{
+                    display: "flex",
+                    paddingBottom: "1rem",
+                    gap: "0.8rem",
+                    alignItems: "center",
+                    justifyContent: isMobile ? "flex-start" : "center",
+                    position: "relative"
+                }}>
+                    {isMobile ? (
+                        <div style={{ width: "100%" }}>
+                            <button
+                                onClick={() => setIsSatMenuOpen(!isSatMenuOpen)}
+                                style={{
+                                    background: "rgba(255,255,255,0.05)",
+                                    color: "var(--accent-gold)",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    padding: "0.6rem 1rem",
+                                    borderRadius: "8px",
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    fontSize: "0.9rem",
+                                    fontWeight: "bold"
+                                }}
+                            >
+                                SATELLITE: {satellite}
+                                <span style={{ fontSize: "1.2rem" }}>{isSatMenuOpen ? "×" : "☰"}</span>
+                            </button>
+                            {isSatMenuOpen && (
+                                <div style={{
+                                    position: "absolute",
+                                    top: "100%",
+                                    left: 0,
+                                    width: "100%",
+                                    background: "rgba(10,10,10,0.95)",
+                                    backdropFilter: "blur(10px)",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    borderRadius: "8px",
+                                    zIndex: 100,
+                                    marginTop: "5px",
+                                    overflow: "hidden"
+                                }}>
+                                    {["RISAT-1", "RISAT-2B", "RISAT-2BR1", "RISAT-2BR2"].map(sat => (
+                                        <button
+                                            key={sat}
+                                            onClick={() => { setSatellite(sat); setIsSatMenuOpen(false); }}
+                                            style={{
+                                                width: "100%",
+                                                padding: "1rem",
+                                                background: satellite === sat ? "rgba(212,175,55,0.1)" : "none",
+                                                color: satellite === sat ? "var(--accent-gold)" : "#aaa",
+                                                border: "none",
+                                                textAlign: "left",
+                                                cursor: "pointer",
+                                                fontWeight: satellite === sat ? "bold" : "normal",
+                                                borderBottom: "1px solid rgba(255,255,255,0.05)"
+                                            }}
+                                        >
+                                            {sat}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                            <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+                            {["RISAT-1", "RISAT-2B", "RISAT-2BR1", "RISAT-2BR2"].map(sat => (
+                                <button
+                                    key={sat}
+                                    onClick={() => setSatellite(sat)}
+                                    style={{
+                                        background: satellite === sat ? "var(--accent-gold)" : "rgba(255,255,255,0.05)",
+                                        color: satellite === sat ? "#000" : "#aaa",
+                                        border: "none",
+                                        padding: "0.6rem 1.5rem",
+                                        borderRadius: "30px",
+                                        cursor: "pointer",
+                                        fontSize: "0.9rem",
+                                        fontWeight: "bold",
+                                        transition: "all 0.2s",
+                                        flexShrink: 0
+                                    }}
+                                >
+                                    {sat}
+                                </button>
+                            ))}
+                        </>
+                    )}
                 </div>
 
-                {/* Station Tabs (Left) - Matching Scheduling Page Style */}
-                <div style={{
-                    display: "flex", gap: "0.6rem", overflowX: "auto",
-                    paddingBottom: "15px", marginBottom: "0.5rem", scrollbarWidth: "none"
-                }}>
-                    {stations.map(station => (
-                        <button
-                            key={station.name}
-                            onClick={() => setCurrentStation(station)}
-                            style={{
-                                background: currentStation?.name === station.name ? "rgba(212, 175, 55, 0.15)" : "rgba(255,255,255,0.03)",
-                                border: currentStation?.name === station.name ? "1px solid var(--accent-gold)" : "1px solid rgba(255,255,255,0.1)",
-                                color: currentStation?.name === station.name ? "var(--accent-gold)" : "#888",
-                                padding: "0.5rem 1rem",
-                                borderRadius: "20px",
-                                fontSize: "0.85rem",
-                                fontWeight: currentStation?.name === station.name ? "600" : "400",
-                                cursor: "pointer",
-                                whiteSpace: "nowrap",
-                                transition: "all 0.2s ease"
-                            }}
-                        >
-                            {station.name}
-                        </button>
-                    ))}
+                {/* Station Tabs */}
+                <div style={{ position: "relative", marginBottom: "0.5rem" }}>
+                    {isMobile ? (
+                        <div style={{ width: "100%" }}>
+                            <button
+                                onClick={() => setIsStationMenuOpen(!isStationMenuOpen)}
+                                style={{
+                                    background: "rgba(255,255,255,0.03)",
+                                    color: "#fff",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    padding: "0.5rem 1rem",
+                                    borderRadius: "8px",
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    fontSize: "0.85rem"
+                                }}
+                            >
+                                STATION: {currentStation?.name || "Select Station"}
+                                <span style={{ fontSize: "1.2rem" }}>{isStationMenuOpen ? "×" : "☰"}</span>
+                            </button>
+                            {isStationMenuOpen && (
+                                <div style={{
+                                    position: "absolute",
+                                    top: "100%",
+                                    left: 0,
+                                    width: "100%",
+                                    background: "rgba(10,10,10,0.95)",
+                                    backdropFilter: "blur(10px)",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    borderRadius: "8px",
+                                    zIndex: 100,
+                                    marginTop: "5px",
+                                    maxHeight: "200px",
+                                    overflowY: "auto"
+                                }}>
+                                    {stations.map(station => (
+                                        <button
+                                            key={station.name}
+                                            onClick={() => { setCurrentStation(station); setIsStationMenuOpen(false); }}
+                                            style={{
+                                                width: "100%",
+                                                padding: "0.8rem 1rem",
+                                                background: currentStation?.name === station.name ? "rgba(212,175,55,0.1)" : "none",
+                                                color: currentStation?.name === station.name ? "var(--accent-gold)" : "#888",
+                                                border: "none",
+                                                textAlign: "left",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid rgba(255,255,255,0.05)"
+                                            }}
+                                        >
+                                            {station.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div style={{ display: "flex", gap: "0.6rem", overflowX: "auto", paddingBottom: "15px", scrollbarWidth: "none" }}>
+                            {stations.map(station => (
+                                <button
+                                    key={station.name}
+                                    onClick={() => setCurrentStation(station)}
+                                    style={{
+                                        background: currentStation?.name === station.name ? "rgba(212, 175, 55, 0.15)" : "rgba(255,255,255,0.03)",
+                                        border: currentStation?.name === station.name ? "1px solid var(--accent-gold)" : "1px solid rgba(255,255,255,0.1)",
+                                        color: currentStation?.name === station.name ? "var(--accent-gold)" : "#888",
+                                        padding: "0.5rem 1rem",
+                                        borderRadius: "20px",
+                                        fontSize: "0.85rem",
+                                        fontWeight: currentStation?.name === station.name ? "600" : "400",
+                                        cursor: "pointer",
+                                        whiteSpace: "nowrap",
+                                        transition: "all 0.2s ease",
+                                        flexShrink: 0
+                                    }}
+                                >
+                                    {station.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Scrollable Pass Grid */}
@@ -170,13 +316,13 @@ export default function Home() {
                     className="hide-scrollbar"
                     style={{
                         flex: 1,
-                        overflowY: "auto",
+                        overflowY: isMobile ? "visible" : "auto",
                         display: "grid",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+                        gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(340px, 1fr))",
                         gridAutoRows: "min-content",
                         gap: "1.2rem",
                         paddingBottom: "2rem",
-                        paddingRight: "10px"
+                        paddingRight: isMobile ? 0 : "10px"
                     }}
                 >
                     <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
