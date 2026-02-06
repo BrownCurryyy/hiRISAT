@@ -1,6 +1,6 @@
 # hiRISAT
 
-![alt text](assets/logo.png)
+![hiRISAT Logo](frontend/src/assets/logo.png)
 **The Advanced Mission Control Dashboard for ISRO's RISAT Constellation.**
 
 hiRISAT is a high-precision satellite tracking and scheduling engine designed to bridge the gap between complex orbital mechanics and user-friendly design. It provides real-time pass predictions, conflict-free scheduling, and a sleek "Mission Control" interface for ground station operators and enthusiasts.
@@ -27,6 +27,7 @@ A comprehensive tool for managing ground station resources.
 A dedicated space for project philosophy and developer insights.
 - **Tech Stack Visualization**: Badges for the core technologies used.
 - **Developer Profile**: Connect with the creator.
+
 
 ## ⚡ Getting Started
 
