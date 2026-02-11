@@ -3,7 +3,7 @@
 ![hiRISAT Logo](frontend/src/assets/logo.png)
 **The Advanced Mission Control Dashboard for ISRO's RISAT Constellation.**
 
-hiRISAT is a high-precision satellite tracking and scheduling engine designed to bridge the gap between complex orbital mechanics and user-friendly design. It provides real-time pass predictions, conflict-free scheduling, and a sleek "Mission Control" interface for ground station operators and enthusiasts.
+hiRISAT is a high-precision satellite tracking and ground station scheduling engine built for ISRO’s RISAT constellation. It combines orbital propagation (SGP4), link feasibility estimation, and intelligent conflict resolution into a unified “Mission Control” dashboard.
 
 ---
 
@@ -15,6 +15,8 @@ A real-time dashboard for tracking individual satellites.
 - **Live Orbit Data**: Calculates Elevation, Azimuth, and Range using SGP4 propagation.
 - **Card-Based Grid**: View all upcoming passes in a clean, scrollable grid with expanding details (Mean Elevation, Orbit Direction).
 - **Multi-Station Support**: Switch between multiple Ground Stations instantly.
+- **Pass Feasibility Engine**: Elevation filtering, usable duration estimation, and link margin calculation.
+- **Link Budget Estimation**: Free Space Path Loss (FSPL), atmospheric losses, received power, and data opportunity estimation.
 
 ### 2. Scheduling Dashboard
 A comprehensive tool for managing ground station resources.
@@ -31,9 +33,11 @@ A dedicated space for project philosophy and developer insights.
 
 ## ⚡ Getting Started
 
-### Prerequisites
-- Node.js (v16+)
-- Python (v3.9+)
+### Tech Stack
+- **Backend**: FastAPI, Uvicorn, SGP4
+- **Scheduler**: Automated TLE updates (24-hour sync)
+- **Frontend**: React, TailwindCSS, Chart.js, Framer Motion
+- **Deployment**: Vercel, Railway
 
 ### Installation
 
@@ -66,3 +70,5 @@ A dedicated space for project philosophy and developer insights.
 - **RISAT-2BR2**
 
 ---
+
+Built as an independent systems engineering project to simulate real-world satellite ground operations.
