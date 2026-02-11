@@ -372,7 +372,7 @@ function CountdownTimer({ targetDate }) {
 }
 
 function PassCard({ pass, isNext }) {
-    const [hover, setHover] = useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     // Calculate simple duration
     const start = new Date(pass.rise);
@@ -383,11 +383,16 @@ function PassCard({ pass, isNext }) {
 
     const isPast = new Date() > end;
 
+    const getQualityColor = (q) => {
+        if (q === "Good") return "#4ECDC4";
+        if (q === "Marginal") return "#FAD02E";
+        return "#FF6B6B";
+    };
+
     return (
         <motion.div
             layout
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
+            onClick={() => setExpanded(!expanded)}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: isPast ? 0.5 : 1, scale: 1 }}
             style={{
@@ -396,12 +401,31 @@ function PassCard({ pass, isNext }) {
                 border: isNext ? "1px solid var(--accent-gold)" : "1px solid rgba(255,255,255,0.05)",
                 borderRadius: "8px",
                 padding: "1.2rem",
-                cursor: "default",
+                cursor: "pointer",
                 position: "relative",
-                boxShadow: isNext ? "0 0 20px rgba(212,175,55,0.1)" : "none"
+                boxShadow: isNext ? "0 0 20px rgba(212,175,55,0.1)" : "none",
+                transition: "border 0.2s"
             }}
+            whileHover={{ border: "1px solid rgba(255,255,255,0.2)" }}
         >
-            {isNext && <div style={{ position: "absolute", top: 10, right: 10, fontSize: "0.7rem", color: "var(--accent-gold)", fontWeight: "bold" }}>NEXT</div>}
+            {/* Badges Container */}
+            <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                {pass.link_quality && (
+                    <div style={{
+                        fontSize: "0.6rem",
+                        background: getQualityColor(pass.link_quality) + "22",
+                        color: getQualityColor(pass.link_quality),
+                        padding: "2px 6px",
+                        borderRadius: "4px",
+                        border: `1px solid ${getQualityColor(pass.link_quality)}44`,
+                        fontWeight: "bold",
+                        textTransform: "uppercase"
+                    }}>
+                        {pass.link_quality}
+                    </div>
+                )}
+                {isNext && <div style={{ fontSize: "0.7rem", color: "var(--accent-gold)", fontWeight: "bold" }}>NEXT</div>}
+            </div>
 
             <div style={{ fontSize: "0.8rem", color: "#888", marginBottom: "0.2rem" }}>
                 {start.toLocaleDateString()}
@@ -423,7 +447,7 @@ function PassCard({ pass, isNext }) {
 
             {/* EXPANDED DETAILS */}
             <AnimatePresence>
-                {hover && (
+                {expanded && (
                     <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
@@ -439,10 +463,42 @@ function PassCard({ pass, isNext }) {
                                 <div style={{ fontSize: "0.7rem", color: "#666" }}>DIRECTION</div>
                                 <div style={{ color: "#ddd" }}>{pass.direction || "-"}</div>
                             </div>
+                            <div>
+                                <div style={{ fontSize: "0.7rem", color: "#666" }}>LINK MARGIN</div>
+                                <div style={{ color: getQualityColor(pass.link_quality) }}>{pass.link_margin?.toFixed(2)} dB</div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: "0.7rem", color: "#666" }}>USABLE DUR.</div>
+                                <div style={{ color: "#ddd" }}>{Math.floor(pass.usable_duration / 60)}m {Math.round(pass.usable_duration % 60)}s</div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: "0.7rem", color: "#666" }}>PEAK RANGE</div>
+                                <div style={{ color: "#ddd" }}>{pass.peak_range_km?.toFixed(1)} km</div>
+                            </div>
+                            <div style={{ gridColumn: "1 / -1" }}>
+                                <div style={{ fontSize: "0.7rem", color: "#666" }}>ESTIMATED DATA</div>
+                                <div style={{ color: "var(--accent-gold)", fontSize: "1.1rem", fontWeight: "300" }}>
+                                    {pass.estimated_data_mb?.toFixed(2)} MB
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <div style={{
+                marginTop: "0.8rem",
+                textAlign: "center",
+                fontSize: "0.7rem",
+                color: "#444",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "4px"
+            }}>
+                {expanded ? "CLICK TO COLLAPSE" : "CLICK FOR DETAILS"}
+                <span style={{ transform: expanded ? "rotate(180deg)" : "none", transition: "transform 0.3s" }}>▼</span>
+            </div>
         </motion.div>
     );
 }

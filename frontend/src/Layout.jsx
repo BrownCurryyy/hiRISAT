@@ -9,31 +9,37 @@ export default function Layout() {
 
     return (
         <>
-            <Header />
-            {/* Navigation Bar */}
-            <nav style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: isMobile ? '0.8rem' : '2rem',
-                padding: isMobile ? '0.6rem 0.5rem' : '1rem',
-                background: 'rgba(0,0,0,0.5)',
-                backdropFilter: 'blur(5px)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                width: '100%',
-                boxSizing: 'border-box',
+            <div style={{
                 position: isMobile ? 'static' : 'sticky',
                 top: 0,
-                zIndex: 1001,
-                overflowX: isMobile ? 'auto' : 'visible',
-                scrollbarWidth: 'none'
+                zIndex: 1000,
+                background: 'rgba(5, 5, 5, 0.8)',
+                backdropFilter: 'blur(10px)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
             }}>
-                <style>{`nav::-webkit-scrollbar { display: none; }`}</style>
-                <NavLink to="/" current={location.pathname} isMobile={isMobile}>Pass-Predictor</NavLink>
-                <NavLink to="/scheduling" current={location.pathname} isMobile={isMobile}>Scheduling</NavLink>
-                <NavLink to="/info" current={location.pathname} isMobile={isMobile}>Info</NavLink>
-                <NavLink to="/about" current={location.pathname} isMobile={isMobile}>About</NavLink>
-            </nav>
+                <Header isStickyContainer />
+                {/* Navigation Bar */}
+                <nav style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: isMobile ? '0.8rem' : '2rem',
+                    padding: isMobile ? '0.6rem 0.5rem' : '1rem',
+                    background: 'none',
+                    backdropFilter: 'none',
+                    borderBottom: 'none',
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    overflowX: isMobile ? 'auto' : 'visible',
+                    scrollbarWidth: 'none'
+                }}>
+                    <style>{`nav::-webkit-scrollbar { display: none; }`}</style>
+                    <NavLink to="/" current={location.pathname} isMobile={isMobile}>Pass-Predictor</NavLink>
+                    <NavLink to="/scheduling" current={location.pathname} isMobile={isMobile}>Scheduling</NavLink>
+                    <NavLink to="/info" current={location.pathname} isMobile={isMobile}>Info</NavLink>
+                    <NavLink to="/about" current={location.pathname} isMobile={isMobile}>About</NavLink>
+                </nav>
+            </div>
 
             <div className="container" style={{ minHeight: '80vh' }}>
                 <Outlet />

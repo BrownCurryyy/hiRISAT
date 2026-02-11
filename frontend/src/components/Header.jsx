@@ -3,7 +3,7 @@ import { getSystemStatus } from "../services/api";
 import logo from "../assets/logo.png";
 import useMobile from "../hooks/useMobile";
 
-export default function Header() {
+export default function Header({ isStickyContainer }) {
     const isMobile = useMobile();
     const [currentTime, setCurrentTime] = useState(new Date());
     const [lastUpdated, setLastUpdated] = useState(null);
@@ -41,11 +41,11 @@ export default function Header() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            background: 'rgba(5, 5, 5, 0.8)',
-            borderBottom: '1px solid var(--glass-border)',
+            background: isStickyContainer ? 'none' : 'rgba(5, 5, 5, 0.8)',
+            borderBottom: isStickyContainer ? 'none' : '1px solid var(--glass-border)',
             padding: isMobile ? '0.8rem 1rem' : '1rem 2rem',
-            backdropFilter: 'blur(10px)',
-            position: isMobile ? 'static' : 'sticky',
+            backdropFilter: isStickyContainer ? 'none' : 'blur(10px)',
+            position: isStickyContainer ? 'static' : (isMobile ? 'static' : 'sticky'),
             top: 0,
             zIndex: 1000
         }}>

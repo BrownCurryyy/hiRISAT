@@ -84,7 +84,8 @@ def get_passes(sat: str, station: str = "Bengaluru"):
 
     passes = compute_passes(
         tle1, tle2,
-        gs["lat"], gs["lon"], gs["alt"]
+        gs["lat"], gs["lon"], gs["alt"],
+        sat_params=SATELLITES[sat]
     )
 
     return passes
@@ -114,7 +115,7 @@ def get_schedule():
             # Calling compute_passes for each pair
             # Note: This computes for the *next* 24h from *now* each time called
             # Ideally we'd fix the 'now' time, but for this scale it's negligible
-            raw_passes = compute_passes(tle1, tle2, gs["lat"], gs["lon"], gs["alt"])
+            raw_passes = compute_passes(tle1, tle2, gs["lat"], gs["lon"], gs["alt"], sat_params=sat_data)
             
             for p in raw_passes:
                 # Add metadata we need for scheduling
