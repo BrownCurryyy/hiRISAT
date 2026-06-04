@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/api/:path*",
-            "destination": "https://hirisat-backend.onrender.com/:path*"
+            "destination": "https://hirisat.onrender.com/:path*"
         },
         {
             "source": "/(.*)",
