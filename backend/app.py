@@ -99,6 +99,12 @@ def get_stations():
         ]
     }
 
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
 @app.get("/status")
 def get_status():
     return {"last_updated": last_updated}
